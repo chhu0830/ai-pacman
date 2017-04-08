@@ -58,6 +58,15 @@ class CleanerAgent(Agent):
     def getAction(self, state):
         "The agent receives a GameState (defined in pacman.py)."
         "[Project 1] YOUR CODE HERE"
+        pos = state.getPacmanPosition()
+        if Directions.EAST in state.getLegalPacmanActions() and state.hasFood(pos[0] + 1, pos[1]):
+            return Directions.EAST
+        elif Directions.SOUTH in state.getLegalPacmanActions() and state.hasFood(pos[0], pos[1] - 1):
+            return Directions.SOUTH
+        elif Directions.WEST in state.getLegalPacmanActions() and state.hasFood(pos[0] - 1, pos[1]):
+            return Directions.WEST
+        elif Directions.NORTH in state.getLegalPacmanActions() and state.hasFood(pos[0], pos[1] + 1):
+            return Directions.NORTH
 
         return Directions.STOP
             
