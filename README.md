@@ -2,13 +2,16 @@
 Assignments for Intro. to Artificial Intelligence
 
 ## How To Use Git
+    git clone https://github.com/chhu0830/ai-pacman
+
     git checkout origin/<branch> -b <branch>
+    git rebase master
 
     git commit -am "commit message"
     git push origin <branch>
 
 ## Assignments
-### lab1
+### Lab1
 - P1-1 CleanerAgent
     - Usage: python pacman.py -p CleanerAgent -l P1-1
 
