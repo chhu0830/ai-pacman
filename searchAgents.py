@@ -81,10 +81,35 @@ class FroggerAgent(Agent):
 "P1-3"
 class SnakeAgent(Agent):
     "But you don't have a sneaking suit."
-    
     def getAction(self, state):
         "The agent receives a GameState (defined in pacman.py)."
         "[Project 1] YOUR CODE HERE"
+        # print state.getGhostState(1).getDirection()
+        ghostPos = [state.getGhostPosition(1)[0], state.getGhostPosition(2)[0]]
+        ghostDir = [state.getGhostState(1).getDirection(), state.getGhostState(2).getDirection()]
+        pacman = state.getPacmanPosition()[0]
+
+        if pacman < ghostPos[0] and pacman < ghostPos[1]:
+            if ghostDir == ["East", "East"]:
+                if Directions.SOUTH in state.getLegalPacmanActions():
+                    return Directions.SOUTH
+                if Directions.EAST in state.getLegalPacmanActions():
+                    return Directions.EAST
+            if Directions.NORTH in state.getLegalPacmanActions() and pacman <= 3:
+                return Directions.NORTH
+            if Directions.SOUTH in state.getLegalPacmanActions() and pacman > 3:
+                return Directions.SOUTH
+            if Directions.EAST in state.getLegalPacmanActions():
+                return Directions.EAST
+        if pacman > ghostPos[0] and pacman > ghostPos[1]:
+            if Directions.NORTH in state.getLegalPacmanActions():
+                return Directions.NORTH
+            if Directions.EAST in state.getLegalPacmanActions():
+                return Directions.EAST
+
+                
+
+        # print pacman, ghostPos[0], state.getGhostState(1).getDirection(), state.getGhostState(2).getDirection()
         
         return Directions.STOP
         
