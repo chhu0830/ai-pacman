@@ -58,14 +58,6 @@ class CleanerAgent(Agent):
     def getAction(self, state):
         "The agent receives a GameState (defined in pacman.py)."
         "[Project 1] YOUR CODE HERE"
-        pos = state.getPacmanPosition()
-        if Directions.EAST in state.getLegalPacmanActions() and state.hasFood(pos[0] + 1, pos[1]):
-            return Directions.EAST
-        elif Directions.WEST in state.getLegalPacmanActions() and state.hasFood(pos[0] - 1, pos[1]):
-            return Directions.WEST
-        elif Directions.SOUTH in state.getLegalPacmanActions() and state.hasFood(pos[0], pos[1] - 1):
-            return Directions.SOUTH
-
         return Directions.STOP
             
 "P1-2"
@@ -91,11 +83,51 @@ class SnakeAgent(Agent):
 "P1-4"
 class DodgeAgent(Agent):
     "You can run, but you can't hide."
-    
     def getAction(self, state):
         "The agent receives a GameState (defined in pacman.py)."
         "[Project 1] YOUR CODE HERE"
-        
+        p = state.getGhostPosition(1)
+        d = state.getGhostState(1).getDirection()
+        pos = state.getPacmanPosition()
+        G_dis = 8 - p[0] + p[1] - 1
+        A_dis = 8 - pos[0] + pos[1] - 1
+        if (G_dis >= A_dis):
+            if Directions.EAST in state.getLegalPacmanActions():
+                return Directions.EAST
+            else:
+                return Directions.SOUTH
+        if p[0] != 1 and p[0] != 8 and p[1] != 1 and p[1] != 8:
+            return Directions.STOP
+        if (p[0] == 8 and d == "North") or (p[0] == 1 and d == "South") or (p[1] == 8 and d == "West") or (p[1] == 1 and d == "East"):
+            if pos[0] == 1:
+                if Directions.SOUTH in state.getLegalPacmanActions():
+                    return Directions.SOUTH
+                else:
+                    return Directions.EAST
+            elif pos[1] == 8:
+                if Directions.WEST in state.getLegalPacmanActions():
+                    return Directions.WEST
+                else:
+                    return Directions.SOUTH
+            elif pos[0] == 8:
+                return Directions.NORTH
+            else:
+                return Directions.WEST
+        else:
+            if pos[0] == 1:
+                if Directions.NORTH in state.getLegalPacmanActions():
+                    return Directions.NORTH
+                else:
+                    return Directions.EAST
+            elif pos[1] == 8:
+                if Directions.EAST in state.getLegalPacmanActions():
+                    return Directions.EAST
+                else:
+                    return Directions.SOUTH
+            elif pos[0] == 8:
+                return Directions.SOUTH
+            else:
+                return Directions.EAST
         return Directions.STOP
 
 #######################################################
