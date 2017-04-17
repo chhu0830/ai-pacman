@@ -75,6 +75,43 @@ class FroggerAgent(Agent):
     def getAction(self, state):
         "The agent receives a GameState (defined in pacman.py)."
         "[Project 1] YOUR CODE HERE"
+        pac_pos = state.getPacmanPosition()
+        pac_x, pac_y = pac_pos
+        g1_pos = state.getGhostPosition(1)
+        g2_pos = state.getGhostPosition(2)
+        g1_x, g1_y = g1_pos
+        g2_x, g2_y = g2_pos
+        d1 = state.getGhostState(1).getDirection()
+        d2 = state.getGhostState(2).getDirection()
+        
+        if pac_x == 4 and pac_y == 8 and Directions.EAST in state.getLegalPacmanActions():
+            return Directions.EAST
+        elif pac_x == 4 and pac_y == 6 and g1_x == 4 and g1_y == 5:
+            return Directions.STOP
+        elif pac_x == 4 and pac_y == 6 and g1_x == 3 and g1_y == 5 and d1 == "East":
+            return Directions.STOP
+        elif pac_x == 4 and pac_y == 6 and g1_x == 5 and g1_y == 5 and d1 == "West":
+            return Directions.STOP
+        elif pac_x == 5 and pac_y == 3 and g2_x == 6 and g2_y == 3:
+            return Directions.STOP
+        elif pac_x == 5 and pac_y == 3 and g2_x == 6 and g2_y == 4 and d2 == "South":
+            return Directions.STOP
+        elif pac_x == 5 and pac_y == 3 and g2_x == 6 and g2_y == 2 and d2 == "North":
+            return Directions.STOP
+        elif pac_x == 8 and pac_y == 3 and Directions.SOUTH in state.getLegalPacmanActions():
+            return Directions.SOUTH
+        elif pac_y == 8 and Directions.EAST in state.getLegalPacmanActions():
+            return Directions.EAST
+        elif pac_y == 3 and Directions.EAST in state.getLegalPacmanActions():
+            return Directions.EAST
+        elif pac_x == 4 and Directions.SOUTH in state.getLegalPacmanActions():
+            return Directions.SOUTH
+        elif pac_x == 8 and Directions.SOUTH in state.getLegalPacmanActions():
+            return Directions.SOUTH
+        #elif Directions.SOUTH in state.getLegalPacmanActions():
+        #    return Directions.SOUTH
+        else:
+            return Directions.STOP
         
         return Directions.STOP
         
