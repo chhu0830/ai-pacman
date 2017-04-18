@@ -73,6 +73,21 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 # P2-1
+def search(state, problem, states, path):
+    if problem.isGoalState(state):
+        return True
+
+    successors = problem.getSuccessors(state)
+    for state, move, cost in successors:
+        if state in states:
+            continue
+        states.append(state)
+        path.append(move)
+        if search(state, problem, states, path):
+            return True
+        path.pop()
+        states.pop()
+    return False
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -90,6 +105,12 @@ def depthFirstSearch(problem):
     
     "[Project 2] YOUR CODE HERE"
     
+    start = problem.getStartState()
+    path = []
+
+    search(start, problem, [start], path)
+
+    return path
     util.raiseNotDefined()
 
 # P2-2
