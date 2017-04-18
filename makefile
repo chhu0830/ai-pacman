@@ -14,4 +14,4 @@ p2-1:
 p2-2:
 	python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs
 p2-3:
-	python pacman.py -l mediumMaze -p SearchAgent -a fn=astar, heuristic=manhattanHeuristic
+	python pacman.py -l mediumMaze -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
