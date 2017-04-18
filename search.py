@@ -92,28 +92,18 @@ def depthFirstSearch(problem):
     stack = util.Stack()
 
     start = problem.getStartState()
-    states = [start]
-    actions = []
-    stack.push((start, 'Stop', 0))
+    stack.push(([start], []))
 
     while not stack.isEmpty():
-        state, action, step = stack.pop()
+        states, actions = stack.pop()
 
-        step = step + 1
-        states = states[:step]
-        actions = path[:step - 1]
-
-        states.append(state)
-        actions.append(action)
-
-        successors = problem.getSuccessors(state)
+        successors = problem.getSuccessors(states[-1])
         for state, action, cost in successors:
             if problem.isGoalState(state):
-                actions.append(action)
-                return actions
+                return actions + [action]
             if state in states:
                 continue
-            stack.push((state, action, step))
+            stack.push((states + [state], actions + [action]))
 
     return []
     util.raiseNotDefined()
