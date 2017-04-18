@@ -97,10 +97,11 @@ def depthFirstSearch(problem):
     while not stack.isEmpty():
         states, actions = stack.pop()
 
+        if problem.isGoalState(states[-1]):
+            return actions
+
         successors = problem.getSuccessors(states[-1])
         for state, action, cost in successors:
-            if problem.isGoalState(state):
-                return actions + [action]
             if state in states:
                 continue
             stack.push((states + [state], actions + [action]))
@@ -121,10 +122,11 @@ def breadthFirstSearch(problem):
     while not queue.isEmpty():
         states, actions = queue.pop()
 
+        if problem.isGoalState(states[-1]):
+            return actions
+
         successors = problem.getSuccessors(states[-1])
         for state, action, cost in successors:
-            if problem.isGoalState(state):
-                return actions + [action]
             if state in states:
                 continue
             queue.push((states + [state], actions + [action]))
