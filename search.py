@@ -90,21 +90,23 @@ def depthFirstSearch(problem):
     
     "[Project 2] YOUR CODE HERE"
     stack = util.Stack()
+    states = []
 
     start = problem.getStartState()
-    stack.push(([start], []))
+    stack.push((start, []))
 
     while not stack.isEmpty():
-        states, actions = stack.pop()
+        state, actions = stack.pop()
 
-        if problem.isGoalState(states[-1]):
+        if problem.isGoalState(state):
             return actions
 
-        successors = problem.getSuccessors(states[-1])
+        states.append(state)
+        successors = problem.getSuccessors(state)
         for state, action, cost in successors:
             if state in states:
                 continue
-            stack.push((states + [state], actions + [action]))
+            stack.push((state, actions + [action]))
 
     return []
     util.raiseNotDefined()
@@ -115,21 +117,23 @@ def breadthFirstSearch(problem):
     
     "[Project 2] YOUR CODE HERE"    
     queue = util.Queue()
+    states = []
 
     start = problem.getStartState()
-    queue.push(([start], []))
+    queue.push((start, []))
 
     while not queue.isEmpty():
-        states, actions = queue.pop()
+        state, actions = queue.pop()
 
-        if problem.isGoalState(states[-1]):
+        if problem.isGoalState(state):
             return actions
 
-        successors = problem.getSuccessors(states[-1])
+        states.append(state)
+        successors = problem.getSuccessors(state)
         for state, action, cost in successors:
             if state in states:
                 continue
-            queue.push((states + [state], actions + [action]))
+            queue.push((state, actions + [action]))
 
     return []
     
