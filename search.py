@@ -136,7 +136,6 @@ def breadthFirstSearch(problem):
             queue.push((state, actions + [action]))
 
     return []
-    
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -160,7 +159,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     states = []
     
     start = problem.getStartState()
-    queue.push((start, []),heuristic(start,problem))
+    queue.push((start, []), heuristic(start, problem))
 
     while not queue.isEmpty():
         state, actions = queue.pop()
@@ -173,11 +172,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         states.append(state)
         successors = problem.getSuccessors(state)
         for state, action, cost in successors:
-            queue.push((state, actions + [action]), problem.getCostOfActions(actions + [action])+ heuristic(state,problem))
+            queue.push((state, actions + [action]), problem.getCostOfActions(actions + [action]) + heuristic(state, problem))
 
     return []
-       
-    
     util.raiseNotDefined()
 
 
