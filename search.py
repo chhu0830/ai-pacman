@@ -98,14 +98,14 @@ def depthFirstSearch(problem):
     while not stack.isEmpty():
         state, actions = stack.pop()
 
+        if state in states:
+            continue
         if problem.isGoalState(state):
             return actions
 
         states.append(state)
         successors = problem.getSuccessors(state)
         for state, action, cost in successors:
-            if state in states:
-                continue
             stack.push((state, actions + [action]))
 
     return []
@@ -125,14 +125,14 @@ def breadthFirstSearch(problem):
     while not queue.isEmpty():
         state, actions = queue.pop()
 
+        if state in states:
+            continue
         if problem.isGoalState(state):
             return actions
 
         states.append(state)
         successors = problem.getSuccessors(state)
         for state, action, cost in successors:
-            if state in states:
-                continue
             queue.push((state, actions + [action]))
 
     return []
@@ -165,14 +165,14 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     while not queue.isEmpty():
         state, actions = queue.pop()
 
+        if state in states:
+            continue
         if problem.isGoalState(state):
             return actions
 
         states.append(state)
         successors = problem.getSuccessors(state)
         for state, action, cost in successors:
-            if state in states:
-                continue
             queue.push((state, actions + [action]), problem.getCostOfActions(actions + [action])+ heuristic(state,problem))
 
     return []
