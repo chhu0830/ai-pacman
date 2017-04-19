@@ -156,6 +156,27 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "print heuristic(problem.getStartState(), problem)"
     
     "[Project 2] YOUR CODE HERE"
+    queue = util.PriorityQueue()
+    states = []
+    
+    start = problem.getStartState()
+    queue.push((start, []),heuristic(start,problem))
+
+    while not queue.isEmpty():
+        state, actions = queue.pop()
+
+        if problem.isGoalState(state):
+            return actions
+
+        states.append(state)
+        successors = problem.getSuccessors(state)
+        for state, action, cost in successors:
+            if state in states:
+                continue
+            queue.push((state, actions + [action]), problem.getCostOfActions(actions + [action])+ heuristic(state,problem))
+
+    return []
+       
     
     util.raiseNotDefined()
 
