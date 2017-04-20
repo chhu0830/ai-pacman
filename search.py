@@ -105,6 +105,7 @@ def depthFirstSearch(problem):
 
         states.append(state)
         successors = problem.getSuccessors(state)
+        successors.reverse()
         for state, action, cost in successors:
             stack.push((state, actions + [action]))
 
@@ -132,6 +133,7 @@ def breadthFirstSearch(problem):
 
         states.append(state)
         successors = problem.getSuccessors(state)
+        successors.reverse()
         for state, action, cost in successors:
             queue.push((state, actions + [action]))
 
