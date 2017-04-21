@@ -89,7 +89,27 @@ def depthFirstSearch(problem):
     """
     
     "[Project 2] YOUR CODE HERE"
-    
+    stack = util.Stack()
+    states = []
+
+    start = problem.getStartState()
+    stack.push((start, []))
+
+    while not stack.isEmpty():
+        state, actions = stack.pop()
+
+        if state in states:
+            continue
+        if problem.isGoalState(state):
+            return actions
+
+        states.append(state)
+        successors = problem.getSuccessors(state)
+        successors.reverse()
+        for state, action, cost in successors:
+            stack.push((state, actions + [action]))
+
+    return []
     util.raiseNotDefined()
 
 # P2-2
@@ -97,7 +117,26 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     
     "[Project 2] YOUR CODE HERE"    
-    
+    queue = util.Queue()
+    states = []
+
+    start = problem.getStartState()
+    queue.push((start, []))
+
+    while not queue.isEmpty():
+        state, actions = queue.pop()
+
+        if state in states:
+            continue
+        if problem.isGoalState(state):
+            return actions
+
+        states.append(state)
+        successors = problem.getSuccessors(state)
+        for state, action, cost in successors:
+            queue.push((state, actions + [action]))
+
+    return []
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -117,7 +156,26 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "print heuristic(problem.getStartState(), problem)"
     
     "[Project 2] YOUR CODE HERE"
+    queue = util.PriorityQueue()
+    states = []
     
+    start = problem.getStartState()
+    queue.push((start, []), heuristic(start, problem))
+
+    while not queue.isEmpty():
+        state, actions = queue.pop()
+
+        if state in states:
+            continue
+        if problem.isGoalState(state):
+            return actions
+
+        states.append(state)
+        successors = problem.getSuccessors(state)
+        for state, action, cost in successors:
+            queue.push((state, actions + [action]), problem.getCostOfActions(actions + [action]) + heuristic(state, problem))
+
+    return []
     util.raiseNotDefined()
 
 
