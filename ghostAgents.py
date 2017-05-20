@@ -42,33 +42,6 @@ class RandomGhost( GhostAgent ):
         dist.normalize()
         return dist
 
-class StraightRandomGhost(GhostAgent):
-    "Ghosts in horizontallist move horizontally, the others move vertically"
-
-    horizontallist = [1]
-    def getDistribution(self, state):
-        dist = util.Counter()        
-        # ghost with horizontal moving only
-        if self.index in self.horizontallist: 
-            for a in state.getLegalActions(self.index):
-                if a is Directions.EAST or a is Directions.WEST:
-                    dist[a] = 1.0
-            if len(dist) is 0:
-                self.horizontallist.remove(self.index)
-                for a in state.getLegalActions( self.index ): dist[a] = 1.0
-        # ghost with vertical moving only
-        else: 
-            for a in state.getLegalActions(self.index):
-                if a is Directions.NORTH or a is Directions.SOUTH:
-                    dist[a] = 1.0    
-            if len(dist) is 0:
-                self.horizontallist.append(self.index)
-                for a in state.getLegalActions( self.index ): dist[a] = 1.0                    
-        dist.normalize()
-        return dist
-
-
-
 class DirectionalGhost( GhostAgent ):
     "A ghost that prefers to rush Pacman, or flee when scared."
     def __init__( self, index, prob_attack=0.8, prob_scaredFlee=0.8 ):
