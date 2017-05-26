@@ -75,57 +75,49 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "[Project 3] YOUR CODE HERE"
+
+        '''
+        print newGhostStates[0]
+        print GameState
+        print newPos
+        print newFood 
+        print len(currentGameState.getCapsules())
+        print successorGameState.hasFood(newPos[0], newPos[1])
+        '''
+
+        newGhost = newGhostStates[0].getPosition()
+        diff = abs(newPos[0] - newGhost[0]) + abs(newPos[1] - newGhost[1])
+        # score = score - (50/diff)
+        cap_dif = 0
+        # tmp = 25
+
         
-        East_limit = 0
-        West_limit = 0
-        North_limit = 0
-        South_limit = 0
-        food_cnt = 0.0
-        Pacman_x = newPos[0]
-        Pacman_y = newPos[1]
-        man_dis = abs(Pacman_x - newGhostStates[0].getPosition()[0]) + abs(Pacman_y - newGhostStates[0].getPosition()[1])
-        for p in range(23):
-            if currentGameState.hasWall(Pacman_x + p, Pacman_y):
-                East_limit = p - 1
-                West_limit = 22 - East_limit
-                break;
-        for k in range(7):
-            if currentGameState.hasWall(Pacman_x, Pacman_y + k):
-                North_limit = k - 1
-                South_limit = 6 - North_limit
-                break;
-        for i in range(East_limit):
-            for j in range(North_limit):
-                if newFood[Pacman_x + i][Pacman_y + j] or (newCapsules[0][0] == Pacman_x + i and newCapsules[0][1] == Pacman_y + j):
-                    if j == 0 and i == 0:
-                        pass;
-                    food_cnt += float(1.0 / float(((i + j) * (i + j))/2.0))
-            for j in range(South_limit):
-                if newFood[Pacman_x + i][Pacman_y - j] or (newCapsules[0][0] == Pacman_x + i and newCapsules[0][1] == Pacman_y - j):
-                    if j == 0 and i == 0:
-                        pass;
-                    food_cnt += float(1.0 / float(((i + j) * (i + j))/2.0))
-        for i in range(West_limit):
-            for j in range(North_limit):
-                if newFood[Pacman_x - i][Pacman_y + j] or (newCapsules[0][0] == Pacman_x - i and newCapsules[0][1] == Pacman_y + j):
-                    if j == 0 and i == 0:
-                        pass;
-                    food_cnt += float(1.0 / float(((i + j) * (i + j))/2.0))
-            for j in range(South_limit):
-                if newFood[Pacman_x - i][Pacman_y - j] or (newCapsules[0][0] == Pacman_x - i and newCapsules[0][1] == Pacman_y - j):
-                    if j == 0 and i == 0:
-                        pass;
-                    food_cnt += float(1.0 / float(((i + j) * (i + j))/2.0))
-        eval = food_cnt + successorGameState.getScore()
-        if successorGameState.getScore() > 350:
-            eval = food_cnt * 1.5  + successorGameState.getScore()
-        elif successorGameState.getScore() > 600:
-            eval = food_cnt * 2 + successorGameState.getScore()
-        if man_dis < 2:
-            eval = -100
-        if newScaredTimes[0] > 0:
-            eval = food_cnt - man_dis * 10 + successorGameState.getScore()
-        return eval
+        for capsule in capsules:
+            cap_dif += manhattanDistance(newPos, capsule)
+
+        """
+        if len(capsules) < len(current_c):
+            eat = True
+            tmp = tmp - 1
+        """
+        foodlist = newFood.asList()
+        nearbyfood = 100
+        for foodpos in foodlist:
+            food_dif =  abs(newPos[0] - foodpos[0]) + abs(newPos[1] - foodpos[1])
+            if food_dif < nearbyfood:
+                nearbyfood = food_dif
+        """
+        if tmp == 0:
+            eat = False
+            tmp = 25
+        """     
+
+# return successorGameState.getScore()
+#        if eat == False:
+        return successorGameState.getScore() - (50 / diff) - cap_dif - nearbyfood
+#        else:
+#            tmp = tmp - 1
+#        return successorGameState.getScore()  - cap_dif - nearbyfood
 
 def scoreEvaluationFunction(currentGameState):
     """
