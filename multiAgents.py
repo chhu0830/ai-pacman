@@ -19,6 +19,8 @@ import random, util
 from game import Agent
 
 class ReflexAgent(Agent):
+#    tmp = 25
+#    eat = False
     """
       A reflex agent chooses an action at each choice point by examining
       its alternatives via a state evaluation function.
@@ -70,12 +72,51 @@ class ReflexAgent(Agent):
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
         newFood = successorGameState.getFood()
+        capsules = successorGameState.getCapsules()
+        current_c = currentGameState.getCapsules()
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "[Project 3] YOUR CODE HERE"
+#        print newGhostStates[0]
+#        print GameState
+        print newPos
+        print newFood 
+        print len(currentGameState.getCapsules())
+
+#        print successorGameState.hasFood(newPos[0], newPos[1])
+        newGhost = newGhostStates[0].getPosition()
+        diff = abs(newPos[0] - newGhost[0]) + abs(newPos[1] - newGhost[1])
+        score = score - (50/diff)
+        cap_dif = 0
+#        tmp = 25
         
-        return successorGameState.getScore()
+        if len(capsules) != 0:
+            for i in range(len(capsules)):
+                cap_dif  = cap_dif + abs(newPos[0] - capsules[i][0]) + abs(newPos[1] - capsules[i][1])
+        """
+        if len(capsules) < len(current_c):
+            eat = True
+            tmp = tmp - 1
+        """
+        foodlist = newFood.asList()
+        nearbyfood = 100
+        for foodpos in foodlist:
+            food_dif =  abs(newPos[0] - foodpos[0]) + abs(newPos[1] - foodpos[1])
+            if food_dif < nearbyfood:
+                nearbyfood = food_dif
+        """
+        if tmp == 0:
+            eat = False
+            tmp = 25
+        """     
+
+# return successorGameState.getScore()
+#        if eat == False:
+        return successorGameState.getScore() - (50 / diff) - cap_dif - nearbyfood
+#        else:
+#            tmp = tmp - 1
+#        return successorGameState.getScore()  - cap_dif - nearbyfood
 
 def scoreEvaluationFunction(currentGameState):
     """
