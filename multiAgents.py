@@ -199,13 +199,14 @@ class MinimaxAgent(MultiAgentSearchAgent):
         scores = []
         legalMoves = gameState.getLegalActions(agent)
         nextAgent = (agent + 1) % gameState.getNumAgents()
+        nextDepth = depth - 1 if nextAgent == 0 else depth
 
         if len(legalMoves) == 0:
-            scores = [self.minimax(gameState, depth - 1 if nextAgent == 0 else depth, nextAgent)]
+            scores = [self.minimax(gameState, nextDepth, nextAgent)]
         else:
             for action in legalMoves:
                 successorGameState = gameState.generateSuccessor(agent, action)
-                scores.append(self.minimax(successorGameState, depth - 1 if nextAgent == 0 else depth, nextAgent))
+                scores.append(self.minimax(successorGameState, nextDepth, nextAgent))
 
         if agent == 0:
             return max(scores)
