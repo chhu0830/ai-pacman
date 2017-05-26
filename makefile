@@ -1,27 +1,32 @@
 all:
 
 # Lab 1
-p1-1:
+q1-1:
 	python pacman.py -p CleanerAgent -l P1-1
-p1-2:
+q1-2:
 	python pacman.py -p FroggerAgent -l P1-2 -g StraightRandomGhost
-p1-3:
+q1-3:
 	python pacman.py -p SnakeAgent -l P1-3 -g StraightRandomGhost
-p1-4:
+q1-4:
 	python pacman.py -p DodgeAgent -l P1-4
 
-p2-1:
+q2-1:
 	python pacman.py -l mediumMaze -p SearchAgent -a fn=dfs
-p2-2:
+q2-2:
 	python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs
-p2-3:
+q2-3:
 	python pacman.py -l mediumMaze -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic
 
-p3-1:
+# Lab2
+q3-1:
 	python pacman.py -l openClassic -p ReflexAgent
-p3-2:
+q3-2:
 	python pacman.py -l minimaxClassic -p MinimaxAgent -a depth=4
-p3-3:
+q3-3:
 	python pacman.py -l smallClassic -p AlphaBetaAgent -a depth=3
-p3-4:
+q3-4:
 	python pacman.py -l smallClassic -p AlphaBetaAgent -a depth=3,evalFn=better
+test:
+	python autograder.py -q q1 --no-graphics
+	python autograder.py -q q2 --no-graphics
+	python autograder.py -q q3 --no-graphics

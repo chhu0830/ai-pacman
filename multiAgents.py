@@ -181,8 +181,37 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
         
         "[Project 3] YOUR CODE HERE"        
-        
+
+        legalMoves = gameState.getLegalActions()
+        # Choose one of the best actions
+        scores = [self.minimax(gameState.generateSuccessor(0, action), self.depth, 1) for action in legalMoves]
+        bestScore = max(scores)
+        bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+
+        return legalMoves[chosenIndex]
         util.raiseNotDefined()
+
+    def minimax(self, gameState, depth, agent):
+        if depth == 0:
+            return self.evaluationFunction(gameState)
+
+        scores = []
+        legalMoves = gameState.getLegalActions(agent)
+        nextAgent = (agent + 1) % gameState.getNumAgents()
+
+        if len(legalMoves) == 0:
+            scores = [self.minimax(gameState, depth - 1 if nextAgent == 0 else depth, nextAgent)]
+        else:
+            for action in legalMoves:
+                successorGameState = gameState.generateSuccessor(agent, action)
+                scores.append(self.minimax(successorGameState, depth - 1 if nextAgent == 0 else depth, nextAgent))
+
+        if agent == 0:
+            return max(scores)
+        else:
+            return min(scores)
+            
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
