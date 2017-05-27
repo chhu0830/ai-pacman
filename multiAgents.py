@@ -69,55 +69,26 @@ class ReflexAgent(Agent):
         # Useful information you can extract from a GameState (pacman.py)
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
+        newFood = successorGameState.getFood().asList()
         newCapsules = successorGameState.getCapsules()
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "[Project 3] YOUR CODE HERE"
 
-        '''
-        print newGhostStates[0]
-        print GameState
-        print newPos
-        print newFood 
-        print len(currentGameState.getCapsules())
-        print successorGameState.hasFood(newPos[0], newPos[1])
-        '''
+        ghostDist = 0
+        for i in range(len(newGhostStates)):
+            d = manhattanDistance(newPos, newGhostStates[i].getPosition())
+            if d <= 1:
+                ghostDist = -float('inf')
+                break
+            if newScaredTimes[i] != 0:
+                ghostDist += (100 / d)
 
-        newGhost = newGhostStates[0].getPosition()
-        diff = abs(newPos[0] - newGhost[0]) + abs(newPos[1] - newGhost[1])
-        # score = score - (50/diff)
-        cap_dif = 0
-        # tmp = 25
+        capDist = min([manhattanDistance(newPos, capPos) for capPos in newCapsules]) if len(newCapsules) else 0
+        foodDist = min([manhattanDistance(newPos, foodPos) for foodPos in newFood]) if len(newFood) else 0
 
-        
-        for capsule in capsules:
-            cap_dif += manhattanDistance(newPos, capsule)
-
-        """
-        if len(capsules) < len(current_c):
-            eat = True
-            tmp = tmp - 1
-        """
-        foodlist = newFood.asList()
-        nearbyfood = 100
-        for foodpos in foodlist:
-            food_dif =  abs(newPos[0] - foodpos[0]) + abs(newPos[1] - foodpos[1])
-            if food_dif < nearbyfood:
-                nearbyfood = food_dif
-        """
-        if tmp == 0:
-            eat = False
-            tmp = 25
-        """     
-
-# return successorGameState.getScore()
-#        if eat == False:
-        return successorGameState.getScore() - (50 / diff) - cap_dif - nearbyfood
-#        else:
-#            tmp = tmp - 1
-#        return successorGameState.getScore()  - cap_dif - nearbyfood
+        return successorGameState.getScore() + ghostDist - 50 * capDist - foodDist - 25 * len(newFood)
 
 def scoreEvaluationFunction(currentGameState):
     """
