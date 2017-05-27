@@ -193,7 +193,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         util.raiseNotDefined()
 
     def minimax(self, gameState, depth, agent):
-        if depth == 0:
+        if depth == 0 or gameState.isWin() or gameState.isLose():
             return self.evaluationFunction(gameState)
 
         scores = []
@@ -201,12 +201,11 @@ class MinimaxAgent(MultiAgentSearchAgent):
         nextAgent = (agent + 1) % gameState.getNumAgents()
         nextDepth = depth - 1 if nextAgent == 0 else depth
 
-        if len(legalMoves) == 0:
-            scores = [self.minimax(gameState, nextDepth, nextAgent)]
-        else:
-            for action in legalMoves:
-                successorGameState = gameState.generateSuccessor(agent, action)
-                scores.append(self.minimax(successorGameState, nextDepth, nextAgent))
+        for action in legalMoves:
+            successorGameState = gameState.generateSuccessor(agent, action)
+            scores.append(self.minimax(successorGameState, nextDepth, nextAgent))
+        # scores.append(self.minimax(gameState, nextDepth, nextAgent))
+        # print scores
 
         if agent == 0:
             return max(scores)
@@ -225,8 +224,46 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
         
         "[Project 3] YOUR CODE HERE"        
-        
+        a = -float('inf')
+        chosenAction = 0
+        legalMoves = gameState.getLegalActions()
+
+        for action in legalMoves:
+            v = self.alphabeta(gameState.generateSuccessor(0, action), self.depth, a, float('inf'), 1)
+            a = max(a, v)
+            if v == a:
+                chosenAction = action
+
+        return chosenAction
         util.raiseNotDefined()
+        
+
+    def alphabeta(self, gameState, depth, a, b, agent):
+        if depth == 0 or gameState.isWin() or gameState.isLose():
+            return self.evaluationFunction(gameState)
+
+        legalMoves = gameState.getLegalActions(agent)
+        nextAgent = (agent + 1) % gameState.getNumAgents()
+        nextDepth = depth - 1 if nextAgent == 0 else depth
+
+        if agent == 0:
+            v = -float('inf')
+            for action in legalMoves:
+                successorGameState = gameState.generateSuccessor(agent, action)
+                v = max(v, self.alphabeta(successorGameState, nextDepth, a, b, nextAgent))
+                a = max(a, v)
+                if a > b:
+                    break
+            return v
+        else:
+            v = float('inf')
+            for action in legalMoves:
+                successorGameState = gameState.generateSuccessor(agent, action)
+                v = min(v, self.alphabeta(successorGameState, nextDepth, a, b, nextAgent))
+                b = min(b, v)
+                if a > b:
+                    break
+            return v
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
