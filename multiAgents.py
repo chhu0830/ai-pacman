@@ -201,12 +201,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
         nextAgent = (agent + 1) % gameState.getNumAgents()
         nextDepth = depth - 1 if nextAgent == 0 else depth
 
-        for action in legalMoves:
-            successorGameState = gameState.generateSuccessor(agent, action)
-            scores.append(self.minimax(successorGameState, nextDepth, nextAgent))
-        # scores.append(self.minimax(gameState, nextDepth, nextAgent))
-        # print scores
-
+        scores = [self.minimax(gameState.generateSuccessor(agent, action), nextDepth, nextAgent) for action in legalMoves]
+        
         if agent == 0:
             return max(scores)
         else:
@@ -225,16 +221,19 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         
         "[Project 3] YOUR CODE HERE"        
         a = -float('inf')
-        chosenAction = 0
+        scores = []
         legalMoves = gameState.getLegalActions()
 
         for action in legalMoves:
             v = self.alphabeta(gameState.generateSuccessor(0, action), self.depth, a, float('inf'), 1)
             a = max(a, v)
-            if v == a:
-                chosenAction = action
+            scores.append(v)
+                
+        bestScore = max(scores)
+        bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
 
-        return chosenAction
+        return legalMoves[chosenIndex]
         util.raiseNotDefined()
         
 
