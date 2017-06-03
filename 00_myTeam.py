@@ -98,5 +98,17 @@ class DummyAgent(CaptureAgent):
         You should change this in your own agent.
         '''
 
+        OppoAgentPos, OppoGhostPos = self.getOppoPos(gameState)
         return random.choice(actions)
+
+    def getOppoPos(self, gameState):
+        AgentExistIdx = self.getOpponents(gameState)
+        GhostPos = []
+        AgentPos = []
+        for idx in AgentExistIdx:
+            if idx >= 4:
+                GhostPos.append(gameState.getAgentPosition(idx))
+            else:
+                AgentPos.append(gameState.getAgentPosition(idx))
+        return (AgentPos, GhostPos)
 
