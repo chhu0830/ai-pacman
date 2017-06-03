@@ -94,9 +94,77 @@ class DummyAgent(CaptureAgent):
         """
         actions = gameState.getLegalActions(self.index[0])
 
+        values = [self.eval(gameState, a) for a in actions]
+        maxValue = max(values)
+        bestActions = [a for a, v in zip(actions, values) if v == maxValue]
+        
+        act =  random.choice(bestActions)
+        return act
         '''
         You should change this in your own agent.
         '''
 
-        return random.choice(actions)
+
+    def getOppoPos(self, gameState):
+        AgentExistIdx = self.getOpponents(gameState)
+        GhostPos = []
+        AgentPos = []
+        for idx in AgentExistIdx:
+            if idx >= 4:
+                GhostPos.append(gameState.getAgentPosition(idx))
+            else:
+                AgentPos.append(gameState.getAgentPosition(idx))
+        return (AgentPos, GhostPos)
+    
+    def getScaredTimer(self, gameState):
+        AgentExistIdx = self.getOpponents(gameState)
+        ScaredTimer = []
+        for idx in AgentExistIdx:
+            if idx >= 4:
+                ScaredTimer.append(gameState.getAgentState(idx).scaredTimer)
+        return ScaredTimer
+    
+    def getSuccessor(self, gameState, action, index):
+        return gameState.generateSuccessor(index, action)
+    
+    def eval(self, gameState, action):
+        OppoAgentPos, OppoGhostPos = self.getOppoPos(gameState)
+        # Pacmans' Viewpoint
+        successorGameState = self.getSuccessor(gameState, action, self.index[0])
+        PacPos = successorGameState.getAgentState(self.index[0]).getPosition()
+        ScaredTimer = self.getScaredTimer(gameState)
+        Food = self.getFood(successorGameState).asListNot()
+        Capsules = self.getCapsules(successorGameState)
+#print("ScaredTimer: ", ScaredTimer)
+#print("PacmanPosition: ", PacPos)
+#print("Food: ", Food)
+#print("Capsules: ", Capsules)
+        ghostDist = 0
+        # Avoid meeting the ghosts
+        for i in range(len(OppoGhostPos)):
+            d = self.getMazeDistance(OppoGhostPos[i], PacPos)
+            if d <= 1:
+                if ScaredTimer[i] != 0:
+                    ghostDist = float('inf')
+                else:
+                    ghostDist = -float('inf')
+                break
+            if ScaredTimer[i] != 0:
+                ghostDist += (100 / d)
+        capDist = min([self.getMazeDistance(PacPos, capPos) for capPos in Capsules]) if len(Capsules) else 0
+        foodDist = min([self.getMazeDistance(PacPos, foodPos) for foodPos in Food]) if len(Food) else 0
+        score = (successorGameState.getScore() - gameState.getScore())
+        Pac_score = ghostDist - 50 * capDist - foodDist - 25 * len(Food)
+        # Ghosts' Viewpoint
+        successorGameState = self.getSuccessor(gameState, action, self.index[1])
+        GhostPos = successorGameState.getAgentState(self.index[1]).getPosition()
+        ScaredTime = successorGameState.getAgentState(self.index[1]).scaredTimer
+        pacDist = min([self.getMazeDistance(GhostPos, pacPos) for pacPos in OppoAgentPos]) if len(OppoAgentPos) else 0
+        Gho_score = 0
+        if ScaredTime != 0:
+            if len(OppoAgentPos) != 0 and min([self.getMazeDistance(GhostPos, pacPos) for pacPos in OppoAgentPos]) <= 1:
+                Gho_score = -float('inf')
+            else:
+                Gho_score = 100 * pacDist
+        return Gho_score + Pac_score + score * 10
 
