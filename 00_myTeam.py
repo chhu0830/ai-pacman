@@ -478,8 +478,9 @@ class evalAgent(CaptureAgent):
         maxValue = max(values)
         bestActions = [a for a, v in zip(actions, values) if v == maxValue]
         
-        act =  random.choice(bestActions)
-        return act
+        if len(bestActions) == 0:
+            return 'Stop'
+        return random.choice(bestActions)
 
 
     def getOppoPos(self, gameState):
@@ -510,8 +511,13 @@ class evalAgent(CaptureAgent):
         successorGameState = self.getSuccessor(gameState, action, self.index[0])
         PacPos = successorGameState.getAgentState(self.index[0]).getPosition()
         ScaredTimer = self.getScaredTimer(gameState)
-        Food = self.getFood(successorGameState).asListNot()
+        Food = self.getFood(successorGameState).asList(10)
+        BigFood = self.getFood(successorGameState).asList(50)
         Capsules = self.getCapsules(successorGameState)
+
+        preFoodNum = len(self.getFood(gameState).asList(10))
+        preBigFoodNum = len(self.getFood(gameState).asList(50))
+        preCapsulesNum = len(self.getCapsules(gameState))
         #print("ScaredTimer: ", ScaredTimer)
         #print("PacmanPosition: ", PacPos)
         #print("Food: ", Food)
@@ -527,11 +533,12 @@ class evalAgent(CaptureAgent):
                     ghostDist = -float('inf')
                 break
             if ScaredTimer[i] != 0:
-                ghostDist += (100 / d)
+                ghostDist += (100.0 / d)
         capDist = min([self.getMazeDistance(PacPos, capPos) for capPos in Capsules]) if len(Capsules) else 0
         foodDist = min([self.getMazeDistance(PacPos, foodPos) for foodPos in Food]) if len(Food) else 0
+        bigFoodDist = min([self.getMazeDistance(PacPos, bigFoodPos) for bigFoodPos in BigFood]) if len(BigFood) else 0
         score = (successorGameState.getScore() - gameState.getScore())
-        Pac_score = ghostDist - 50 * capDist - foodDist - 25 * len(Food)
+        Pac_score = ghostDist - 50 * capDist - foodDist - bigFoodDist - 25 * len(Food) - 25 * len(BigFood)
         # Ghosts' Viewpoint
         successorGameState = self.getSuccessor(gameState, action, self.index[1])
         GhostPos = successorGameState.getAgentState(self.index[1]).getPosition()
@@ -543,10 +550,13 @@ class evalAgent(CaptureAgent):
                 Gho_score = -float('inf')
             else:
                 Gho_score = 100 * pacDist
+        capPoint = 1000 if ghostDist == 0 and PacPos in self.getCapsules(gameState) else 0
+        foodPoint = 100 if PacPos in self.getFood(gameState).asList(10) else 0
+        bigFoodPoint = 500 if PacPos in self.getFood(gameState).asList(50) else 0
         if gameState.isOnRedTeam(self.index[0]):
-            return Gho_score + Pac_score + score * 10
+            return Gho_score + Pac_score + score * 10 + capPoint # + foodPoint + bigFoodPoint
         else:
-            return Gho_score + Pac_score - score * 10
+            return Gho_score + Pac_score - score * 10 + capPoint
 
 
 
