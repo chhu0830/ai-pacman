@@ -166,5 +166,8 @@ class DummyAgent(CaptureAgent):
                 Gho_score = -float('inf')
             else:
                 Gho_score = 100 * pacDist
-        return Gho_score + Pac_score + score * 10
+        if gameState.isOnRedTeam(self.index[0]):
+            return Gho_score + Pac_score + score * 10
+        else:
+            return Gho_score + Pac_score - score * 10
 
